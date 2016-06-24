@@ -55,7 +55,7 @@ namespace AppRunas
                 Program.MsgBox("名称不能为空", "ok", "err");
                 return;
             }
-            if (txtPassword.Text == "")
+            if (txtPath.Text == "")
             {
                 Program.MsgBox("路径不能为空", "ok", "err");
                 return;
@@ -85,13 +85,7 @@ namespace AppRunas
             
             if (Program.AddApp(txtName.Text, txtPath.Text, txtDir.Text, txtArgs.Text, txtUsername.Text, txtPassword.Text, txtDomain.Text))
             {
-                if (appName == null)
-                {
-                    Program.MsgBox("任务创建成功");
-                } else
-                {
-                    Program.MsgBox("任务更改成功");
-                }
+                Program.MsgBox((appName == null) ? "任务创建成功" : "任务更改成功");
             }
             this.Close();
         }

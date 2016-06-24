@@ -10,11 +10,14 @@ namespace AppRunas
 {
     static class Program
     {
-
+        // 加密密钥
         private const string ENCRYPT_SALT_KEY = "UK9ei";
+        // 加密向量
         private const string ENCRYPT_IV = "3gbkpH9MOoSeXD1u";
 
+        // 配置文件路径
         private static string configPath = Environment.CurrentDirectory + "/config.xml";
+        // 用户Id：主机名+域名+用户名
         private static string userId = Environment.MachineName + "|" + Environment.UserDomainName + "|" + Environment.UserName;
 
         private static XmlDocument doc = LoadConfig();
@@ -41,11 +44,13 @@ namespace AppRunas
             }
         }
 
+        // 判断用户是否需要注册
         public static bool IsNeedRegister()
         {
             return user.GetAttribute("password") == "";
         }
 
+        // 依任务名称启动程序
         public static void RunApp(string name)
         {
             App app = FindApp(name);
@@ -88,6 +93,7 @@ namespace AppRunas
             }
         }
 
+        // 设置用户密码
         public static bool SetPassword(string password)
         {
             user.SetAttribute("password", Encrypt(password));
@@ -95,15 +101,13 @@ namespace AppRunas
             return true;
         }
 
+        // 验证用户密码
         public static bool VerifyPassword(string password)
         {
-            if (user == null)
-            {
-                return false;
-            }
-            return Decrypt(user.GetAttribute("password")) == password;
+            return (user == null) ? false: Decrypt(user.GetAttribute("password")) == password;
         }
 
+        // 新增或更新任务
         public static bool AddApp(string name, string path, string dir, string args, string username, string password, string domain)
         {
             XmlElement appXML = FindAppXML(name);
@@ -123,6 +127,7 @@ namespace AppRunas
             return true;
         }
 
+        // 移除任务
         public static bool RemoveApp(string name)
         {
             XmlElement appXML = FindAppXML(name);
@@ -134,6 +139,7 @@ namespace AppRunas
             return true;
         }
 
+        // 查找任务
         public static App FindApp(string name)
         {
             XmlElement appXML = FindAppXML(name);
@@ -152,6 +158,7 @@ namespace AppRunas
             return null;
         }
 
+        // 获取全部任务
         public static App[] GetApps()
         {
             XmlNodeList appsXML = user.SelectNodes("app");
@@ -174,12 +181,14 @@ namespace AppRunas
             return apps;
         }
 
+        // 查找任务XML
         public static XmlElement FindAppXML(string name)
         {
             string query = string.Format("app[@name='{0}']", Encrypt(name));
             return (XmlElement)user.SelectSingleNode(query);
         }
 
+        // 加载配置文件
         private static XmlDocument LoadConfig()
         {
             XmlDocument doc = new XmlDocument();
@@ -206,6 +215,7 @@ namespace AppRunas
             return doc;
         }
 
+        // 字符串加密
         private static string Encrypt(string text)
         {
             byte[] key = Encoding.UTF8.GetBytes(getEncryptKey());
@@ -228,6 +238,7 @@ namespace AppRunas
             }
         }
 
+        // 字符串解密
         private static string Decrypt(string text)
         {
             byte[] key = Encoding.UTF8.GetBytes(getEncryptKey());
@@ -250,6 +261,7 @@ namespace AppRunas
             }
         }
 
+        // 获取加密Key
         private static string getEncryptKey()
         {
             string key = ENCRYPT_SALT_KEY + Environment.UserName + Environment.MachineName;
@@ -260,15 +272,10 @@ namespace AppRunas
             return key.Substring(0, 32);
         }
 
+        // 消息框函数
         public static DialogResult MsgBox(string msg, string btn="ok", string icon="info")
         {
-            MessageBoxButtons msgBtn;
-            if (btn == "yesno")
-            {
-                msgBtn = MessageBoxButtons.YesNo;
-            } else {
-                msgBtn = MessageBoxButtons.OK;
-            }
+            MessageBoxButtons msgBtn = (btn == "yesno") ? MessageBoxButtons.YesNo : MessageBoxButtons.OK;
 
             MessageBoxIcon msgIcon;
             if (icon == "err")

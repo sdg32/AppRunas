@@ -110,14 +110,14 @@ namespace AppRunas
                 form.ShowDialog();
                 if (Program.IsNeedRegister())
                 {
-                    Application.Exit();
+                    System.Environment.Exit(0);
                 }
             } else
             {
                 LoginForm form = new LoginForm();
                 if (form.ShowDialog() != DialogResult.OK)
                 {
-                    Application.Exit();
+                    System.Environment.Exit(0);
                 }
             }
 
