@@ -34,9 +34,11 @@ namespace AppRunas
             if (args.Length > 0)
             {
                 RunApp(args[0]);
-                Application.Exit();
+                System.Environment.Exit(0);
+            } else
+            {
+                Application.Run(new MainForm());
             }
-            Application.Run(new MainForm());
         }
 
         public static bool IsNeedRegister()
@@ -135,15 +137,19 @@ namespace AppRunas
         public static App FindApp(string name)
         {
             XmlElement appXML = FindAppXML(name);
-            App app = new App();
-            app.name = Decrypt(appXML.GetAttribute("name"));
-            app.path = Decrypt(appXML.GetAttribute("path"));
-            app.args = Decrypt(appXML.GetAttribute("args"));
-            app.dir = Decrypt(appXML.GetAttribute("dir"));
-            app.username = Decrypt(appXML.GetAttribute("username"));
-            app.password = Decrypt(appXML.GetAttribute("password"));
-            app.domain = Decrypt(appXML.GetAttribute("domain"));
-            return app;
+            if (appXML != null)
+            {
+                App app = new App();
+                app.name = Decrypt(appXML.GetAttribute("name"));
+                app.path = Decrypt(appXML.GetAttribute("path"));
+                app.args = Decrypt(appXML.GetAttribute("args"));
+                app.dir = Decrypt(appXML.GetAttribute("dir"));
+                app.username = Decrypt(appXML.GetAttribute("username"));
+                app.password = Decrypt(appXML.GetAttribute("password"));
+                app.domain = Decrypt(appXML.GetAttribute("domain"));
+                return app;
+            }
+            return null;
         }
 
         public static App[] GetApps()
