@@ -82,8 +82,11 @@ namespace AppRunas
                     info.WorkingDirectory = app.dir;
                 }
 
+                info.Verb = "runas";
                 info.UseShellExecute = false;
                 info.LoadUserProfile = true;
+                info.RedirectStandardError = true;
+                info.RedirectStandardOutput = true;
                 p.StartInfo = info;
                 p.Start();
             }
